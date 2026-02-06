@@ -59,11 +59,25 @@ bool do_exec(int count, ...)
  *   as second argument to the execv() command.
  *
 */
-    if(fork() == 0) execv(command[0], command);
-    else wait(NULL);
-
+    pid_t cpid = fork();
+    if(cpid == 0) {
+        execv(command[0], command);
+        exit(EXIT_FAILURE);
+    }
+    else if (cpid < 0) {
+        va_end(args);
+        return false;
+    }
+    else {
+        int status;
+        if (waitpid(cpid, &status, 0) == -1) {
+            va_end(args);
+            return false;
+        }
+        va_end(args);
+        return (WIFEXITED(status) && WEXITSTATUS(status) == 0);
+    }
     va_end(args);
-
     return true;
 }
 
@@ -96,17 +110,30 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
  *
 */
     int fd = open(outputfile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
-    if(fork() == 0) {
+    pid_t cpid = fork();
+    if(cpid == 0) {
         dup2(fd, STDOUT_FILENO);
         execv(command[0], command);
         close(fd);
+        exit(EXIT_FAILURE);
+    }
+    else if (cpid < 0) {
+        va_end(args);
+        close(fd);
+        return false;
     }
     else {
-        wait(NULL);
+        int status;
+        if (waitpid(cpid, &status, 0) == -1) {
+            va_end(args);
+            close(fd);
+            return false;
+        }
+        va_end(args);
         close(fd);
+        return (WIFEXITED(status) && WEXITSTATUS(status) == 0);
     }
 
     va_end(args);
-
     return true;
 }
