@@ -10,3 +10,5 @@ test.sh.log
 
 actions-runner
 .gitignore
+linux
+testfile.txt
