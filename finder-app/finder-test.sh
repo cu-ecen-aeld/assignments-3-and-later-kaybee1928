@@ -63,6 +63,7 @@ done
 
 OUTPUTSTRING=$(finder.sh "$WRITEDIR" "$WRITESTR")
 
+echo "Writing finder.sh output to /tmp/assignment4-result.txt"
 echo "$OUTPUTSTRING" > "/tmp/assignment4-result.txt"
 
 # remove temporary directories

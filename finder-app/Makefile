@@ -7,6 +7,9 @@ CC = $(CROSS_COMPILE)gcc
 # Compiler flags
 CFLAGS = -Wall -Werror
 
+# Default target
+all: writer
+
 # Default target - build executable
 writer: writer.o
 	$(CC) $(CFLAGS) writer.o -o writer
