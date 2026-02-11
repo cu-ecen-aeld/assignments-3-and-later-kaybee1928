@@ -12,3 +12,4 @@ actions-runner
 .gitignore
 linux
 testfile.txt
+aesdsocket
