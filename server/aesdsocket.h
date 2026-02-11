@@ -11,6 +11,6 @@
 
 void signal_handler(int signum);
 char* append_char(char *buffer, size_t *current_size, size_t *used_size, char c);
-void server();
+void server(int);
 
 #endif //ASSIGNMENTS_3_AND_LATER_KAYBEE1928_AESDSOCKET_H
